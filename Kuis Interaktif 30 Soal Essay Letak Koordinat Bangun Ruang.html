@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kuis 30 Soal Essay: Letak Koordinat Bangun Ruang</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade {
+      animation: fadeSlide 0.25s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-800 antialiased">
+
+  <!-- Toast Notifikasi Pengganti alert() -->
+  <div id="toastBox" class="fixed bottom-5 right-5 z-50 hidden max-w-sm rounded-2xl bg-slate-900 px-4 py-3 text-sm font-medium text-white shadow-xl border border-slate-700">
+    <span id="toastText"></span>
+  </div>
+
+  <!-- Header Sticky -->
+  <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-sm">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-600 text-white shadow-md">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3v18h18" />
+            <path d="M7 14l4-4 3 3 5-5" />
+            <circle cx="19" cy="8" r="2" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-extrabold text-slate-900">Kuis Essay Letak Koordinat Bangun Ruang</h1>
+          <p class="text-xs text-slate-500">30 Soal Membaca Titik (Huruf, Angka), Pergeseran, &amp; Jarak pada Peta Isometrik</p>
+        </div>
+      </div>
+
+      <!-- Indikator Progres & Skor -->
+      <div class="flex items-center gap-2.5">
+        <div class="rounded-2xl bg-indigo-50 px-3.5 py-2 border border-indigo-100 text-center">
+          <span class="block text-[10px] font-bold uppercase text-indigo-500">Terjawab</span>
+          <span id="answeredCountEl" class="text-sm sm:text-base font-extrabold text-indigo-900">0 / 30</span>
+        </div>
+        <div class="rounded-2xl bg-emerald-50 px-3.5 py-2 border border-emerald-100 text-center">
+          <span class="block text-[10px] font-bold uppercase text-emerald-600">Benar</span>
+          <span id="correctCountEl" class="text-sm sm:text-base font-extrabold text-emerald-900">0 / 30</span>
+        </div>
+        <button id="btnResetAll" type="button" class="rounded-2xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 transition">
+          Ulangi Kuis
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Konten Utama -->
+  <main class="mx-auto max-w-6xl px-4 sm:px-6 py-8 space-y-8">
+
+    <!-- Panduan Pengerjaan & Filter -->
+    <section class="rounded-3xl bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 p-6 sm:p-7 text-white shadow-md">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+        <div class="space-y-2 max-w-2xl">
+          <span class="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-purple-200">
+            Lokasi &amp; Koordinat • 30 Soal Essay
+          </span>
+          <h2 class="text-xl sm:text-2xl font-extrabold">Baca Letak Bangun Ruang pada Sumbu Huruf (A–H) &amp; Angka (0–7)</h2>
+          <p class="text-xs sm:text-sm text-indigo-100 leading-relaxed">
+            Setiap titik perpotongan dibaca dengan menyebutkan <strong>sumbu huruf (A–H)</strong> terlebih dahulu, lalu <strong>sumbu angka (0–7)</strong>, misalnya <strong>(C, 1)</strong>. Ketik jawabanmu pada kolom yang tersedia, lalu klik <strong>Periksa Jawaban</strong> atau tekan <strong>Enter</strong>.
+          </p>
+        </div>
+
+        <!-- Filter Kategori -->
+        <div class="flex flex-wrap gap-2">
+          <button type="button" data-filter="all" class="filter-btn rounded-xl bg-purple-300 px-3.5 py-2 text-xs font-extrabold text-slate-950 shadow-sm">
+            Semua (30)
+          </button>
+          <button type="button" data-filter="baca" class="filter-btn rounded-xl bg-white/15 px-3.5 py-2 text-xs font-bold text-white hover:bg-white/25 transition">
+            Baca Koordinat (10)
+          </button>
+          <button type="button" data-filter="geser" class="filter-btn rounded-xl bg-white/15 px-3.5 py-2 text-xs font-bold text-white hover:bg-white/25 transition">
+            Pergeseran &amp; Arah (10)
+          </button>
+          <button type="button" data-filter="analisis" class="filter-btn rounded-xl bg-white/15 px-3.5 py-2 text-xs font-bold text-white hover:bg-white/25 transition">
+            Jarak &amp; Bangun Ruang (10)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Daftar 30 Soal -->
+    <section id="quizContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Dirender lewat JavaScript -->
+    </section>
+
+    <!-- Kartu Rekap Akhir -->
+    <section class="rounded-3xl bg-white p-6 sm:p-8 shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-5">
+      <div>
+        <h3 class="text-lg sm:text-xl font-extrabold text-slate-900">Rekap Hasil Akhir Kuis</h3>
+        <p id="finalSummaryText" class="text-xs sm:text-sm text-slate-600 mt-1">
+          Selesaikan seluruh 30 soal untuk melihat nilai akhir dan tingkat ketepatanmu membaca titik koordinat.
+        </p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="rounded-2xl bg-purple-600 px-5 py-3 text-white text-center shadow-md">
+          <span class="block text-[10px] font-bold uppercase tracking-wider text-purple-200">Nilai Akhir</span>
+          <span id="finalGradeEl" class="text-2xl font-extrabold">0</span>
+        </div>
+        <button id="btnCheckAllRemaining" type="button" class="rounded-2xl bg-slate-900 px-4 py-3 text-xs sm:text-sm font-bold text-white hover:bg-slate-800 transition">
+          Periksa Semua Isian
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // HELPER RENDER PETA KOORDINAT ISOMETRIK (A-H DAN 0-7) + BANGUN RUANG
+    // =========================================================================
+    // Sumbu A-H (colIdx 0..7) melangkah ke kanan-bawah
+    // Sumbu 0-7 (row 0..7) melangkah ke kanan-atas
+    const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    const MAX_COL = 7;
+    const MAX_ROW = 7;
+
+    const ORIGIN_X = 66;
+    const ORIGIN_Y = 122;
+    const STEP_COL_X = 23;
+    const STEP_COL_Y = 13;
+    const STEP_ROW_X = 25;
+    const STEP_ROW_Y = -14;
+
+    function isoX(colIdx, row) {
+      return ORIGIN_X + colIdx * STEP_COL_X + row * STEP_ROW_X;
+    }
+
+    function isoY(colIdx, row) {
+      return ORIGIN_Y + colIdx * STEP_COL_Y + row * STEP_ROW_Y;
+    }
+
+    function letterToIdx(letter) {
+      return LETTERS.indexOf(String(letter).toUpperCase());
+    }
+
+    /**
+     * Merender bangun ruang pada koordinat (letter, row)
+     * kind: 'cube' | 'sphere' | 'cone' | 'cuboid' | 'cylinder'
+     * color: 'green' | 'yellow' | 'purple' | 'blue' | 'red'
+     */
+    function drawShapeAt(item) {
+      const cIdx = letterToIdx(item.col);
+      const rIdx = item.row;
+      const px = isoX(cIdx, rIdx);
+      const py = isoY(cIdx, rIdx);
+
+      const palettes = {
+        green: { top: '#bef264', left: '#84cc16', right: '#65a30d', stroke: '#3f6212', main: '#84cc16' },
+        yellow: { top: '#fef08a', left: '#facc15', right: '#eab308', stroke: '#a16207', main: '#facc15' },
+        purple: { top: '#d8b4fe', left: '#a855f7', right: '#9333ea', stroke: '#6b21a8', main: '#a855f7' },
+        blue: { top: '#93c5fd', left: '#60a5fa', right: '#3b82f6', stroke: '#1d4ed8', main: '#3b82f6' },
+        red: { top: '#fca5a5', left: '#ef4444', right: '#dc2626', stroke: '#991b1b', main: '#ef4444' }
+      };
+      const pal = palettes[item.color] || palettes.green;
+
+      if (item.kind === 'sphere') {
+        return `
+          <g>
+            <ellipse cx="${px}" cy="${py + 1}" rx="9.5" ry="4" fill="#64748b" fill-opacity="0.28" />
+            <circle cx="${px}" cy="${py - 9}" r="10.5" fill="${pal.main}" stroke="${pal.stroke}" stroke-width="1.4" />
+          </g>
+        `;
+      }
+
+      if (item.kind === 'cone') {
+        return `
+          <g>
+            <polygon points="${px},${py - 32} ${px - 11},${py - 7} ${px + 11},${py - 7}" fill="${pal.main}" stroke="${pal.stroke}" stroke-width="1.4" />
+            <ellipse cx="${px}" cy="${py - 7}" rx="11" ry="4.8" fill="${pal.right}" stroke="${pal.stroke}" stroke-width="1.4" />
+          </g>
+        `;
+      }
+
+      if (item.kind === 'cylinder') {
+        return `
+          <g>
+            <path d="M ${px - 10},${py - 20} L ${px - 10},${py - 5} A 10,4.2 0 0,0 ${px + 10},${py - 5} L ${px + 10},${py - 20}" fill="${pal.left}" stroke="${pal.stroke}" stroke-width="1.4" />
+            <ellipse cx="${px}" cy="${py - 20}" rx="10" ry="4.2" fill="${pal.top}" stroke="${pal.stroke}" stroke-width="1.4" />
+          </g>
+        `;
+      }
+
+      if (item.kind === 'cuboid') {
+        return `
+          <g>
+            <polygon points="${px - 14},${py - 14} ${px + 2},${py - 22} ${px + 14},${py - 16} ${px - 2},${py - 8}" fill="${pal.top}" stroke="${pal.stroke}" stroke-width="1.4" />
+            <polygon points="${px - 14},${py - 14} ${px - 2},${py - 8} ${px - 2},${py + 2} ${px - 14},${py - 4}" fill="${pal.left}" stroke="${pal.stroke}" stroke-width="1.4" />
+            <polygon points="${px - 2},${py - 8} ${px + 14},${py - 16} ${px + 14},${py - 6} ${px - 2},${py + 2}" fill="${pal.right}" stroke="${pal.stroke}" stroke-width="1.4" />
+          </g>
+        `;
+      }
+
+      // Default: cube (kubus)
+      return `
+        <g>
+          <polygon points="${px - 10.5},${py - 15} ${px},${py - 20.5} ${px + 10.5},${py - 15} ${px},${py - 9.5}" fill="${pal.top}" stroke="${pal.stroke}" stroke-width="1.4" />
+          <polygon points="${px - 10.5},${py - 15} ${px},${py - 9.5} ${px},${py + 2} ${px - 10.5},${py - 3.5}" fill="${pal.left}" stroke="${pal.stroke}" stroke-width="1.4" />
+          <polygon points="${px},${py - 9.5} ${px + 10.5},${py - 15} ${px + 10.5},${py - 3.5} ${px},${py + 2}" fill="${pal.right}" stroke="${pal.stroke}" stroke-width="1.4" />
+        </g>
+      `;
+    }
+
+    function renderCoordMapSvg(items = [], markers = []) {
+      let gridSvg = '';
+
+      // Garis sejajar sumbu angka (untuk tiap huruf c = 0..7)
+      for (let c = 0; c <= MAX_COL; c++) {
+        const x1 = isoX(c, 0);
+        const y1 = isoY(c, 0);
+        const x2 = isoX(c, MAX_ROW);
+        const y2 = isoY(c, MAX_ROW);
+        gridSvg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" />`;
+        gridSvg += `<text x="${x1 - 11}" y="${y1 + 11}" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#334155">${LETTERS[c]}</text>`;
+        gridSvg += `<circle cx="${x1}" cy="${y1}" r="1.8" fill="#7f1d1d" />`;
+      }
+
+      // Garis sejajar sumbu huruf (untuk tiap angka r = 0..7)
+      for (let r = 0; r <= MAX_ROW; r++) {
+        const x1 = isoX(0, r);
+        const y1 = isoY(0, r);
+        const x2 = isoX(MAX_COL, r);
+        const y2 = isoY(MAX_COL, r);
+        gridSvg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3" />`;
+        gridSvg += `<text x="${x1 - 9}" y="${y1 - 7}" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#334155">${r}</text>`;
+        if (r > 0) {
+          gridSvg += `<circle cx="${x1}" cy="${y1}" r="1.8" fill="#3f6212" />`;
+        }
+      }
+
+      // Sumbu utama hijau (0..7) dan merah (A..H)
+      gridSvg += `<line x1="${isoX(0, 0)}" y1="${isoY(0, 0)}" x2="${isoX(0, MAX_ROW)}" y2="${isoY(0, MAX_ROW)}" stroke="#4d7c0f" stroke-width="2" />`;
+      gridSvg += `<polygon points="${isoX(0, MAX_ROW) + 5},${isoY(0, MAX_ROW) - 4} ${isoX(0, MAX_ROW) - 4},${isoY(0, MAX_ROW) - 3} ${isoX(0, MAX_ROW) - 1},${isoY(0, MAX_ROW) + 4}" fill="#4d7c0f" />`;
+
+      gridSvg += `<line x1="${isoX(0, 0)}" y1="${isoY(0, 0)}" x2="${isoX(MAX_COL, 0)}" y2="${isoY(MAX_COL, 0)}" stroke="#991b1b" stroke-width="2" />`;
+      gridSvg += `<polygon points="${isoX(MAX_COL, 0) + 5},${isoY(MAX_COL, 0) + 4} ${isoX(MAX_COL, 0) - 1},${isoY(MAX_COL, 0) - 4} ${isoX(MAX_COL, 0) - 4},${isoY(MAX_COL, 0) + 4}" fill="#991b1b" />`;
+
+      // Urutkan bangun ruang dari belakang ke depan (colIdx + row makin besar makin ke depan)
+      const sortedItems = [...items].sort((a, b) => (letterToIdx(a.col) + a.row) - (letterToIdx(b.col) + b.row));
+      const shapesSvg = sortedItems.map(drawShapeAt).join('');
+
+      // Penanda titik target/panah opsional
+      const markersSvg = markers.map((m) => {
+        const mx = isoX(letterToIdx(m.col), m.row);
+        const my = isoY(letterToIdx(m.col), m.row);
+        return `
+          <g>
+            <ellipse cx="${mx}" cy="${my}" rx="11" ry="6" fill="none" stroke="#4f46e5" stroke-width="1.8" stroke-dasharray="2,2" />
+            ${m.label ? `<text x="${mx}" y="${my - 22}" text-anchor="middle" font-size="10" font-weight="bold" fill="#312e81">${m.label}</text>` : ''}
+          </g>
+        `;
+      }).join('');
+
+      return `
+        <svg viewBox="0 0 445 235" class="h-44 w-auto mx-auto select-none">
+          ${gridSvg}
+          ${markersSvg}
+          ${shapesSvg}
+        </svg>
+      `;
+    }
+
+    // =========================================================================
+    // BANK 30 SOAL ESSAY LETAK KOORDINAT BANGUN RUANG
+    // =========================================================================
+    const BASE_SCENE = [
+      { col: 'C', row: 1, kind: 'cube', color: 'green' },
+      { col: 'E', row: 2, kind: 'sphere', color: 'yellow' },
+      { col: 'E', row: 4, kind: 'cone', color: 'purple' }
+    ];
+
+    const quizQuestions = [
+      // --- 10 SOAL BACA KOORDINAT (1 - 10) ---
+      {
+        id: 1,
+        category: 'baca',
+        badge: 'Baca Koordinat • Soal 1',
+        question: '1. Perhatikan peta koordinat isometrik di atas. Pada titik koordinat (Huruf, Angka) manakah letak Kubus Hijau?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(c, 1)', '(c,1)', 'c, 1', 'c,1', 'c1'],
+        displayAnswer: '(C, 1)',
+        explanation: 'Kubus Hijau berada pada garis huruf C dan garis angka 1, sehingga koordinatnya adalah (C, 1).',
+        svg: renderCoordMapSvg(BASE_SCENE)
+      },
+      {
+        id: 2,
+        category: 'baca',
+        badge: 'Baca Koordinat • Soal 2',
+        question: '2. Berdasarkan gambar peta di atas, pada titik koordinat berapakah letak Bola Kuning?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(e, 2)', '(e,2)', 'e, 2', 'e,2', 'e2'],
+        displayAnswer: '(E, 2)',
+        explanation: 'Bola Kuning terletak tepat pada perpotongan garis huruf E dan garis angka 2, yaitu (E, 2).',
+        svg: renderCoordMapSvg(BASE_SCENE)
+      },
+      {
+        id: 3,
+        category: 'baca',
+        badge: 'Baca Koordinat • Soal 3',
+        question: '3. Amati posisi Kerucut Ungu pada peta di atas. Tuliskan titik koordinatnya dengan format (Huruf, Angka).',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(e, 4)', '(e,4)', 'e, 4', 'e,4', 'e4'],
+        displayAnswer: '(E, 4)',
+        explanation: 'Kerucut Ungu berada pada garis huruf E dan garis angka 4, sehingga letaknya pada koordinat (E, 4).',
+        svg: renderCoordMapSvg(BASE_SCENE)
+      },
+      {
+        id: 4,
+        category: 'baca',
+        badge: 'Baca Koordinat • Soal 4',
+        question: '4. Sebuah Balok Biru ditempatkan pada peta di atas. Tuliskan koordinat (Huruf, Angka) tempat Balok Biru berada.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(b, 5)', '(b,5)', 'b, 5', 'b,5', 'b5'],
+        displayAnswer: '(B, 5)',
+        explanation: 'Balok Biru berada pada pertemuan garis huruf B dan angka 5, yaitu di koordinat (B, 5).',
+        svg: renderCoordMapSvg([...BASE_SCENE, { col: 'B', row: 5, kind: 'cuboid', color: 'blue' }])
+      },
+      {
+        id: 5,
+        category: 'baca',
+        badge: 'Baca Koordinat • Soal 5',
+        question: '5. Perhatikan Tabung Merah pada peta di atas. Pada titik koordinat manakah Tabung Merah diletakkan?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(g, 3)', '(g,3)', 'g, 3', 'g,3', 'g3'],
+        displayAnswer: '(G, 3)',
+        explanation: 'Tabung Merah terletak pada garis huruf G dan garis angka 3, sehingga koordinatnya adalah (G, 3).',
+        svg: renderCoordMapSvg([...BASE_SCENE, { col: 'G', row: 3, kind: 'cylinder', color: 'red' }])
+      },
+      {
+        id: 6,
+        category: 'baca',
+        badge: 'Baca Koordinat • Soal 6',
+        question: '6. Pada peta di atas, bangun ruang apakah yang berada tepat pada titik koordinat (E, 2)?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['bola kuning', 'bola', 'kuning'],
+        displayAnswer: 'Bola Kuning',
+        explanation: 'Pada titik (E, 2) terdapat bangun ruang Bola berwarna Kuning.',
+        svg: renderCoordMapSvg(BASE_SCENE)
+      },
+      {
+        id: 7,
+        category: 'baca',
+        badge: 'Baca Koordinat • Soal 7',
+        question: '7. Pada peta di atas, bangun ruang apakah yang menempati titik koordinat (E, 4)?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['kerucut ungu', 'kerucut', 'ungu'],
+        displayAnswer: 'Kerucut Ungu',
+        explanation: 'Pada titik (E, 4) terdapat bangun ruang Kerucut berwarna Ungu.',
+        svg: renderCoordMapSvg(BASE_SCENE)
+      },
+      {
+        id: 8,
+        category: 'baca',
+        badge: 'Baca Koordinat • Soal 8',
+        question: '8. Jika titik asal pangkal sumbu (0 pada sumbu angka dan A pada sumbu huruf) dibaca sebagai (Huruf, Angka), tuliskan koordinat titik asal tersebut.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(a, 0)', '(a,0)', 'a, 0', 'a,0', 'a0'],
+        displayAnswer: '(A, 0)',
+        explanation: 'Titik pangkal sumbu berada pada huruf A dan angka 0, sehingga ditulis (A, 0).',
+        svg: renderCoordMapSvg(BASE_SCENE, [{ col: 'A', row: 0, label: 'Asal' }])
+      },
+      {
+        id: 9,
+        category: 'baca',
+        badge: 'Baca Koordinat • Soal 9',
+        question: '9. Perhatikan kubus berwarna pada peta di atas. Tuliskan koordinat (Huruf, Angka) dari Kubus Hijau tersebut.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(c, 1)', '(c,1)', 'c, 1', 'c,1', 'c1'],
+        displayAnswer: '(C, 1)',
+        explanation: 'Kubus Hijau berada di garis C dan angka 1, yaitu koordinat (C, 1).',
+        svg: renderCoordMapSvg(BASE_SCENE)
+      },
+      {
+        id: 10,
+        category: 'baca',
+        badge: 'Baca Koordinat • Soal 10',
+        question: '10. Sebuah Kubus Kuning diletakkan pada peta di atas. Tuliskan titik koordinat (Huruf, Angka) Kubus Kuning tersebut.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(f, 6)', '(f,6)', 'f, 6', 'f,6', 'f6'],
+        displayAnswer: '(F, 6)',
+        explanation: 'Kubus Kuning terletak tepat pada pertemuan garis huruf F dan angka 6, yaitu (F, 6).',
+        svg: renderCoordMapSvg([...BASE_SCENE, { col: 'F', row: 6, kind: 'cube', color: 'yellow' }])
+      },
+
+      // --- 10 SOAL PERGESERAN & ARAH (11 - 20) ---
+      {
+        id: 11,
+        category: 'geser',
+        badge: 'Pergeseran • Soal 11',
+        question: '11. Kubus Hijau berada di (C, 1). Jika kubus digeser 2 langkah sepanjang sumbu huruf ke arah D lalu E, di koordinat manakah posisinya sekarang?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(e, 1)', '(e,1)', 'e, 1', 'e,1', 'e1'],
+        displayAnswer: '(E, 1)',
+        explanation: 'Dari (C, 1), melangkah 2 huruf (C → D → E) sementara angka tetap 1, sehingga menjadi (E, 1).',
+        svg: renderCoordMapSvg(BASE_SCENE, [{ col: 'E', row: 1, label: 'Target' }])
+      },
+      {
+        id: 12,
+        category: 'geser',
+        badge: 'Pergeseran • Soal 12',
+        question: '12. Bola Kuning berada di (E, 2). Jika bola digeser 3 langkah sepanjang sumbu angka (dari 2 ke 5) tanpa mengubah hurufnya, di koordinat manakah posisinya?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(e, 5)', '(e,5)', 'e, 5', 'e,5', 'e5'],
+        displayAnswer: '(E, 5)',
+        explanation: 'Huruf tetap E dan angka bergeser dari 2 menjadi 2 + 3 = 5, sehingga posisinya di (E, 5).',
+        svg: renderCoordMapSvg(BASE_SCENE, [{ col: 'E', row: 5, label: 'Target' }])
+      },
+      {
+        id: 13,
+        category: 'geser',
+        badge: 'Pergeseran • Soal 13',
+        question: '13. Kerucut Ungu berada di (E, 4). Jika digeser 1 langkah ke huruf F dan 2 langkah ke angka 6, di koordinat manakah Kerucut Ungu sekarang?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(f, 6)', '(f,6)', 'f, 6', 'f,6', 'f6'],
+        displayAnswer: '(F, 6)',
+        explanation: 'Huruf E bergeser 1 langkah menjadi F, dan angka 4 bertambah 2 menjadi 6, sehingga koordinatnya (F, 6).',
+        svg: renderCoordMapSvg(BASE_SCENE, [{ col: 'F', row: 6, label: 'Target' }])
+      },
+      {
+        id: 14,
+        category: 'geser',
+        badge: 'Pergeseran • Soal 14',
+        question: '14. Kubus Hijau berada di (C, 1). Jika digeser mundur 1 langkah ke huruf B dan maju 2 langkah ke angka 3, tuliskan koordinat barunya.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(b, 3)', '(b,3)', 'b, 3', 'b,3', 'b3'],
+        displayAnswer: '(B, 3)',
+        explanation: 'Huruf C mundur 1 menjadi B, dan angka 1 maju 2 menjadi 3, sehingga koordinat barunya adalah (B, 3).',
+        svg: renderCoordMapSvg(BASE_SCENE, [{ col: 'B', row: 3, label: 'Baru' }])
+      },
+      {
+        id: 15,
+        category: 'geser',
+        badge: 'Pergeseran • Soal 15',
+        question: '15. Bola Kuning di (E, 2) digeser ke huruf D dan angka 2. Tuliskan koordinat posisi Bola Kuning tersebut.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(d, 2)', '(d,2)', 'd, 2', 'd,2', 'd2'],
+        displayAnswer: '(D, 2)',
+        explanation: 'Huruf bergeser dari E ke D sedangkan angkanya tetap 2, sehingga menjadi (D, 2).',
+        svg: renderCoordMapSvg(BASE_SCENE, [{ col: 'D', row: 2, label: 'Target' }])
+      },
+      {
+        id: 16,
+        category: 'geser',
+        badge: 'Pergeseran • Soal 16',
+        question: '16. Kerucut Ungu di (E, 4) digeser 2 langkah ke huruf G dan 1 langkah ke angka 3. Tuliskan koordinat akhirnya.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(g, 3)', '(g,3)', 'g, 3', 'g,3', 'g3'],
+        displayAnswer: '(G, 3)',
+        explanation: 'Dari E melangkah 2 huruf menjadi G, dan dari 4 berkurang 1 menjadi 3, sehingga koordinatnya (G, 3).',
+        svg: renderCoordMapSvg(BASE_SCENE, [{ col: 'G', row: 3, label: 'Akhir' }])
+      },
+      {
+        id: 17,
+        category: 'geser',
+        badge: 'Pergeseran • Soal 17',
+        question: '17. Sebuah kubus berada di (B, 2). Jika digeser 3 langkah ke huruf E dan 3 langkah ke angka 5, di koordinat manakah kubus itu berada?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(e, 5)', '(e,5)', 'e, 5', 'e,5', 'e5'],
+        displayAnswer: '(E, 5)',
+        explanation: 'Huruf B + 3 langkah = E, dan angka 2 + 3 = 5, sehingga posisinya di (E, 5).',
+        svg: renderCoordMapSvg(BASE_SCENE, [{ col: 'B', row: 2, label: 'Awal' }, { col: 'E', row: 5, label: 'Akhir' }])
+      },
+      {
+        id: 18,
+        category: 'geser',
+        badge: 'Pergeseran • Soal 18',
+        question: '18. Bola Kuning berada di (E, 2). Jika digeser 2 langkah ke huruf C dan 1 langkah ke angka 1, di koordinat manakah Bola Kuning berada?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(c, 1)', '(c,1)', 'c, 1', 'c,1', 'c1'],
+        displayAnswer: '(C, 1)',
+        explanation: 'Huruf E mundur 2 langkah menjadi C, dan angka 2 mundur 1 langkah menjadi 1, sehingga berada di (C, 1).',
+        svg: renderCoordMapSvg(BASE_SCENE, [{ col: 'C', row: 1, label: 'Target' }])
+      },
+      {
+        id: 19,
+        category: 'geser',
+        badge: 'Pergeseran • Soal 19',
+        question: '19. Kubus Hijau berada di (C, 1). Jika digeser 4 langkah ke huruf G dan 4 langkah ke angka 5, tuliskan koordinat posisinya.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(g, 5)', '(g,5)', 'g, 5', 'g,5', 'g5'],
+        displayAnswer: '(G, 5)',
+        explanation: 'Huruf C + 4 langkah = G, dan angka 1 + 4 = 5, sehingga koordinatnya adalah (G, 5).',
+        svg: renderCoordMapSvg(BASE_SCENE, [{ col: 'G', row: 5, label: 'Target' }])
+      },
+      {
+        id: 20,
+        category: 'geser',
+        badge: 'Pergeseran • Soal 20',
+        question: '20. Kerucut Ungu berada di (E, 4). Jika digeser ke huruf C dan angka 6, tuliskan titik koordinat barunya.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(c, 6)', '(c,6)', 'c, 6', 'c,6', 'c6'],
+        displayAnswer: '(C, 6)',
+        explanation: 'Posisi barunya berada pada perpotongan huruf C dan angka 6, yaitu (C, 6).',
+        svg: renderCoordMapSvg(BASE_SCENE, [{ col: 'C', row: 6, label: 'Baru' }])
+      },
+
+      // --- 10 SOAL JARAK & BANGUN RUANG (21 - 30) ---
+      {
+        id: 21,
+        category: 'analisis',
+        badge: 'Jarak & Bangun • Soal 21',
+        question: '21. Berapa langkah satuan sepanjang garis grid dari Bola Kuning di (E, 2) menuju Kerucut Ungu di (E, 4)?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['2', 'dua', '2 langkah', '2 satuan'],
+        displayAnswer: '2',
+        explanation: 'Hurufnya sama-sama E, sedangkan angkanya berpindah dari 2 ke 4 (4 − 2 = 2 langkah satuan).',
+        svg: renderCoordMapSvg(BASE_SCENE)
+      },
+      {
+        id: 22,
+        category: 'analisis',
+        badge: 'Jarak & Bangun • Soal 22',
+        question: '22. Kubus Hijau berada di (C, 1) dan Bola Kuning berada di (E, 2). Berapa selisih langkah pada sumbu huruf dari C ke E?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['2', 'dua', '2 langkah', '2 huruf'],
+        displayAnswer: '2',
+        explanation: 'Dari huruf C ke huruf E berjarak 2 langkah huruf (C → D → E).',
+        svg: renderCoordMapSvg(BASE_SCENE)
+      },
+      {
+        id: 23,
+        category: 'analisis',
+        badge: 'Jarak & Bangun • Soal 23',
+        question: '23. Pada peta di atas, dua bangun ruang berada pada garis huruf yang sama (huruf E). Bangun ruang apakah keduanya? (Sebutkan nama dan warnanya)',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: [
+          'bola kuning dan kerucut ungu',
+          'kerucut ungu dan bola kuning',
+          'bola kuning, kerucut ungu',
+          'kerucut ungu, bola kuning'
+        ],
+        displayAnswer: 'Bola Kuning dan Kerucut Ungu',
+        explanation: 'Bola Kuning berada di (E, 2) dan Kerucut Ungu berada di (E, 4), sehingga keduanya sama-sama terletak pada garis huruf E.',
+        svg: renderCoordMapSvg(BASE_SCENE)
+      },
+      {
+        id: 24,
+        category: 'analisis',
+        badge: 'Jarak & Bangun • Soal 24',
+        question: '24. Jika sebuah Balok Hijau diletakkan tepat di antara Kubus Hijau (C, 1) dan Bola Kuning (E, 2) pada koordinat (D, 2), tuliskan koordinat Balok Hijau tersebut.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(d, 2)', '(d,2)', 'd, 2', 'd,2', 'd2'],
+        displayAnswer: '(D, 2)',
+        explanation: 'Letak Balok Hijau tepat pada pertemuan garis huruf D dan angka 2, yaitu (D, 2).',
+        svg: renderCoordMapSvg([...BASE_SCENE, { col: 'D', row: 2, kind: 'cuboid', color: 'green' }])
+      },
+      {
+        id: 25,
+        category: 'analisis',
+        badge: 'Jarak & Bangun • Soal 25',
+        question: '25. Berapa selisih nilai angka koordinat antara Kerucut Ungu di (E, 4) dan Kubus Hijau di (C, 1)?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['3', 'tiga', '3 satuan'],
+        displayAnswer: '3',
+        explanation: 'Nilai angka Kerucut Ungu adalah 4 dan Kubus Hijau adalah 1, sehingga selisihnya = 4 − 1 = 3.',
+        svg: renderCoordMapSvg(BASE_SCENE)
+      },
+      {
+        id: 26,
+        category: 'analisis',
+        badge: 'Jarak & Bangun • Soal 26',
+        question: '26. Sebuah Tabung Biru ditempatkan pada garis huruf F dan angka 1. Tuliskan koordinat (Huruf, Angka) Tabung Biru tersebut.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(f, 1)', '(f,1)', 'f, 1', 'f,1', 'f1'],
+        displayAnswer: '(F, 1)',
+        explanation: 'Pertemuan garis huruf F dan angka 1 berada pada titik koordinat (F, 1).',
+        svg: renderCoordMapSvg([...BASE_SCENE, { col: 'F', row: 1, kind: 'cylinder', color: 'blue' }])
+      },
+      {
+        id: 27,
+        category: 'analisis',
+        badge: 'Jarak & Bangun • Soal 27',
+        question: '27. Jika sebuah Kubus Merah berada di (A, 4), berapa langkah huruf dari A menuju posisi Kerucut Ungu di (E, 4)?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['4', 'empat', '4 langkah', '4 huruf'],
+        displayAnswer: '4',
+        explanation: 'Dari huruf A ke huruf E berjarak 4 langkah huruf (A → B → C → D → E).',
+        svg: renderCoordMapSvg([...BASE_SCENE, { col: 'A', row: 4, kind: 'cube', color: 'red' }])
+      },
+      {
+        id: 28,
+        category: 'analisis',
+        badge: 'Jarak & Bangun • Soal 28',
+        question: '28. Sebuah Balok Kuning diletakkan pada titik koordinat (D, 5). Tuliskan koordinat tersebut dengan benar.',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(d, 5)', '(d,5)', 'd, 5', 'd,5', 'd5'],
+        displayAnswer: '(D, 5)',
+        explanation: 'Balok Kuning terletak pada garis huruf D dan garis angka 5, yaitu di (D, 5).',
+        svg: renderCoordMapSvg([...BASE_SCENE, { col: 'D', row: 5, kind: 'cuboid', color: 'yellow' }])
+      },
+      {
+        id: 29,
+        category: 'analisis',
+        badge: 'Jarak & Bangun • Soal 29',
+        question: '29. Di antara Kubus Hijau di (C, 1), Bola Kuning di (E, 2), dan Kerucut Ungu di (E, 4), bangun ruang manakah yang memiliki nilai angka koordinat paling kecil?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['kubus hijau', 'kubus', 'hijau'],
+        displayAnswer: 'Kubus Hijau',
+        explanation: 'Nilai angka masing-masing adalah 1 untuk Kubus Hijau, 2 untuk Bola Kuning, dan 4 untuk Kerucut Ungu. Yang terkecil adalah 1 (Kubus Hijau).',
+        svg: renderCoordMapSvg(BASE_SCENE)
+      },
+      {
+        id: 30,
+        category: 'analisis',
+        badge: 'Jarak & Bangun • Soal 30',
+        question: '30. Sebuah Kerucut Merah berada di (G, 6). Jika digeser 2 langkah ke huruf E dan 2 langkah ke angka 4, di koordinat manakah Kerucut Merah berada (tepat pada posisi Kerucut Ungu)?',
+        placeholder: 'Ketik jawabanmu di sini...',
+        accepted: ['(e, 4)', '(e,4)', 'e, 4', 'e,4', 'e4'],
+        displayAnswer: '(E, 4)',
+        explanation: 'Huruf G mundur 2 langkah menjadi E, dan angka 6 mundur 2 langkah menjadi 4, sehingga berada di koordinat (E, 4).',
+        svg: renderCoordMapSvg([...BASE_SCENE, { col: 'G', row: 6, kind: 'cone', color: 'red' }])
+      }
+    ];
+
+    // =========================================================================
+    // STATE & LOGIKA PEMERIKSAAN JAWABAN ESSAY
+    // =========================================================================
+    const userAnswers = {}; // { [id]: { raw: string, isCorrect: boolean | null } }
+    let activeFilter = 'all';
+    let toastTimer = null;
+
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      const txt = document.getElementById('toastText');
+      txt.textContent = msg;
+      box.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        box.classList.add('hidden');
+      }, 2800);
+    }
+
+    function normalizeText(str) {
+      return String(str || '')
+        .toLowerCase()
+        .trim()
+        .replace(/[.,!?]/g, ' ')
+        .replace(/\bdan\b/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function evaluateAnswer(questionObj, rawInput) {
+      const clean = normalizeText(rawInput);
+      if (!clean) return null;
+      return questionObj.accepted.some((ans) => normalizeText(ans) === clean);
+    }
+
+    function updateScoreSummary() {
+      let answered = 0;
+      let correct = 0;
+      quizQuestions.forEach((q) => {
+        const st = userAnswers[q.id];
+        if (st && st.isCorrect !== null) {
+          answered++;
+          if (st.isCorrect) correct++;
+        }
+      });
+
+      document.getElementById('answeredCountEl').textContent = `${answered} / ${quizQuestions.length}`;
+      document.getElementById('correctCountEl').textContent = `${correct} / ${quizQuestions.length}`;
+
+      const score100 = Math.round((correct / quizQuestions.length) * 100);
+      document.getElementById('finalGradeEl').textContent = score100;
+
+      const summaryEl = document.getElementById('finalSummaryText');
+      if (answered === 0) {
+        summaryEl.textContent = 'Selesaikan seluruh 30 soal untuk melihat nilai akhir dan tingkat ketepatanmu membaca titik koordinat.';
+      } else if (answered < quizQuestions.length) {
+        summaryEl.textContent = `Kamu sudah menjawab ${answered} dari 30 soal (${correct} benar). Lanjutkan sisa soal yang belum diperiksa!`;
+      } else {
+        let predicate = 'Terus berlatih membaca sumbu huruf dan angka pada peta koordinat!';
+        if (score100 >= 90) predicate = 'Luar biasa! Kamu sangat mahir membaca dan menggeser titik koordinat bangun ruang.';
+        else if (score100 >= 75) predicate = 'Bagus sekali! Pemahamanmu tentang koordinat isometrik sudah sangat baik.';
+        summaryEl.textContent = `Selesai! Kamu menjawab benar ${correct} dari 30 soal. ${predicate}`;
+      }
+    }
+
+    function renderQuizCards() {
+      const container = document.getElementById('quizContainer');
+      const filtered = activeFilter === 'all'
+        ? quizQuestions
+        : quizQuestions.filter((q) => q.category === activeFilter);
+
+      container.innerHTML = filtered.map((q) => {
+        const st = userAnswers[q.id] || { raw: '', isCorrect: null };
+        let badgeColor = 'bg-purple-100 text-purple-800';
+        if (q.category === 'geser') badgeColor = 'bg-indigo-100 text-indigo-800';
+        else if (q.category === 'analisis') badgeColor = 'bg-teal-100 text-teal-800';
+
+        let cardBorder = 'border-slate-200';
+        if (st.isCorrect === true) cardBorder = 'border-emerald-300 ring-1 ring-emerald-200';
+        else if (st.isCorrect === false) cardBorder = 'border-rose-300 ring-1 ring-rose-200';
+
+        return `
+          <article class="rounded-3xl bg-white p-5 sm:p-6 shadow-sm border ${cardBorder} flex flex-col justify-between space-y-4 transition">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between gap-2">
+                <span class="rounded-full px-3 py-1 text-xs font-bold ${badgeColor}">${q.badge}</span>
+                ${st.isCorrect === true ? `
+                  <span class="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-extrabold text-emerald-800">✓ Benar</span>
+                ` : st.isCorrect === false ? `
+                  <span class="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-extrabold text-rose-800">✕ Perlu Dicek</span>
+                ` : `
+                  <span class="text-xs font-semibold text-slate-400">Belum diperiksa</span>
+                `}
+              </div>
+
+              <!-- Ilustrasi Peta Koordinat & Bangun Ruang -->
+              <div class="rounded-2xl bg-slate-50 p-3 border border-slate-100 flex items-center justify-center">
+                ${q.svg}
+              </div>
+
+              <!-- Pertanyaan Essay -->
+              <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-relaxed">
+                ${q.question}
+              </h3>
+            </div>
+
+            <!-- Kolom Jawaban Essay -->
+            <div class="space-y-3 pt-1">
+              <div class="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="text"
+                  data-qid="${q.id}"
+                  value="${st.raw.replace(/"/g, '&quot;')}"
+                  placeholder="${q.placeholder}"
+                  class="essay-input flex-1 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2.5 text-sm font-semibold text-slate-900 focus:border-purple-500 focus:bg-white focus:outline-none"
+                />
+                <button
+                  type="button"
+                  data-check-qid="${q.id}"
+                  class="check-essay-btn rounded-xl bg-purple-600 px-4 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-purple-700 transition shrink-0 shadow-xs"
+                >
+                  Periksa Jawaban
+                </button>
+              </div>
+
+              ${st.isCorrect === true ? `
+                <div class="animate-fade rounded-2xl bg-emerald-50 p-3.5 text-xs sm:text-sm text-emerald-900 border border-emerald-200 space-y-1">
+                  <p class="font-extrabold">Jawaban Tepat! (${q.displayAnswer})</p>
+                  <p class="text-emerald-800 leading-relaxed">${q.explanation}</p>
+                </div>
+              ` : st.isCorrect === false ? `
+                <div class="animate-fade rounded-2xl bg-rose-50 p-3.5 text-xs sm:text-sm text-rose-900 border border-rose-200 space-y-1">
+                  <p class="font-extrabold">Belum Tepat • Kunci Jawaban: ${q.displayAnswer}</p>
+                  <p class="text-rose-800 leading-relaxed">${q.explanation}</p>
+                </div>
+              ` : ''}
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      document.querySelectorAll('.essay-input').forEach((inp) => {
+        inp.addEventListener('input', () => {
+          const qid = Number(inp.getAttribute('data-qid'));
+          const prev = userAnswers[qid] || { raw: '', isCorrect: null };
+          userAnswers[qid] = { ...prev, raw: inp.value };
+        });
+
+        inp.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const qid = Number(inp.getAttribute('data-qid'));
+            checkSingleQuestion(qid);
+          }
+        });
+      });
+
+      document.querySelectorAll('.check-essay-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const qid = Number(btn.getAttribute('data-check-qid'));
+          checkSingleQuestion(qid);
+        });
+      });
+
+      updateScoreSummary();
+    }
+
+    function checkSingleQuestion(qid) {
+      const qObj = quizQuestions.find((q) => q.id === qid);
+      if (!qObj) return;
+      const cur = userAnswers[qid] || { raw: '', isCorrect: null };
+      if (!cur.raw || !cur.raw.trim()) {
+        showToast(`Silakan ketik jawaban untuk soal nomor ${qid} terlebih dahulu.`);
+        return;
+      }
+      userAnswers[qid] = {
+        raw: cur.raw,
+        isCorrect: evaluateAnswer(qObj, cur.raw)
+      };
+      renderQuizCards();
+    }
+
+    document.querySelectorAll('.filter-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        activeFilter = btn.getAttribute('data-filter');
+        document.querySelectorAll('.filter-btn').forEach((b) => {
+          b.className = 'filter-btn rounded-xl bg-white/15 px-3.5 py-2 text-xs font-bold text-white hover:bg-white/25 transition';
+        });
+        btn.className = 'filter-btn rounded-xl bg-purple-300 px-3.5 py-2 text-xs font-extrabold text-slate-950 shadow-sm';
+        renderQuizCards();
+      });
+    });
+
+    document.getElementById('btnCheckAllRemaining').addEventListener('click', () => {
+      let checkedCount = 0;
+      quizQuestions.forEach((q) => {
+        const cur = userAnswers[q.id];
+        if (cur && cur.raw && cur.raw.trim()) {
+          userAnswers[q.id] = {
+            raw: cur.raw,
+            isCorrect: evaluateAnswer(q, cur.raw)
+          };
+          checkedCount++;
+        }
+      });
+      if (checkedCount === 0) {
+        showToast('Belum ada kolom jawaban yang terisi.');
+        return;
+      }
+      renderQuizCards();
+      showToast(`Berhasil memeriksa ${checkedCount} jawaban yang sudah diisi!`);
+    });
+
+    document.getElementById('btnResetAll').addEventListener('click', () => {
+      Object.keys(userAnswers).forEach((k) => delete userAnswers[k]);
+      renderQuizCards();
+      showToast('Semua jawaban kuis telah direset.');
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderQuizCards();
+    });
+  </script>
+</body>
+</html>
